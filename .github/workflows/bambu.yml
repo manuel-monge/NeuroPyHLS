@@ -1,0 +1,40 @@
+name: Bambu end-to-end
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/neuropyhls/**'
+      - 'rtl/**'
+      - 'tests/bambu/**'
+      - 'tests/golden/**'
+      - '.github/workflows/bambu.yml'
+  pull_request:
+    paths:
+      - 'src/neuropyhls/**'
+      - 'rtl/**'
+      - 'tests/bambu/**'
+      - 'tests/golden/**'
+      - '.github/workflows/bambu.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bambu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Install Verilator
+        run: sudo apt-get update && sudo apt-get install -y verilator
+      - name: Install Bambu (AppImage, run as an external tool)
+        run: |
+          curl -fsSL -o bambu.AppImage https://release.bambuhls.eu/bambu-latest.AppImage
+          chmod +x bambu.AppImage
+          ./bambu.AppImage --appimage-extract >/dev/null
+          echo "$PWD/squashfs-root/usr/bin" >> "$GITHUB_PATH"
+      - run: uv sync --locked
+      - run: uv run pytest -m bambu

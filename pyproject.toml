@@ -1,0 +1,62 @@
+[project]
+name = "neuropyhls"
+version = "0.1.0.dev0"
+description = "Compile Python neural-signal algorithms to HLS C++ and Verilog, with verification against the Python reference."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Manuel Monge", email = "manuel@openic.org" }]
+keywords = ["HLS", "FPGA", "ASIC", "neural signal processing", "electrophysiology", "Bambu"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+]
+dependencies = ["numpy>=1.26"]
+
+[project.urls]
+Homepage = "https://openic-org.github.io/NeuroPyHLS/"
+Repository = "https://github.com/openic-org/NeuroPyHLS"
+Issues = "https://github.com/openic-org/NeuroPyHLS/issues"
+
+[project.scripts]
+neuropyhls = "neuropyhls.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.8", "mypy>=1.13", "pre-commit>=4", "jupytext>=1.16"]
+docs = ["zensical>=0.0.73"]
+rtl = ["cocotb>=1.9"]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/neuropyhls"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["tools/code_db"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "NPY", "RUF"]
+
+[tool.mypy]
+files = ["src"]
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers"]
+markers = [
+    "unit: fast tests with no external tools",
+    "bambu: needs the Bambu HLS tool and Verilator",
+    "vitis: needs AMD Vitis HLS (self-hosted runner)",
+    "slow: long-running tests",
+]

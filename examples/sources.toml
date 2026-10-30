@@ -1,0 +1,10 @@
+# External repositories used as reference implementations, golden-vector sources, or code-db inputs.
+# `neuropyhls fetch-sources` clones each one into external/<name> (git-ignored) at the pinned commit.
+# Only port code from permissively licensed sources, with attribution (see README, "Licensing").
+
+[[source]]
+name = "spikeinterface"
+url = "https://github.com/SpikeInterface/spikeinterface.git"
+commit = "e1edb1a0e9d4c9701110e6a0d0538631e1dc0f2f"
+license = "MIT"
+note = "Reference for bandpass filtering and threshold-crossing peak detection; code-db input."

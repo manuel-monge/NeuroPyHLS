@@ -1,0 +1,18 @@
+name: Vitis HLS
+
+# Vitis is proprietary and large, so this runs only on a self-hosted runner labelled `vitis`.
+# Placeholder until that runner exists; trigger manually from the Actions tab.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vitis:
+    runs-on: [self-hosted, vitis]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+      - run: uv run pytest -m vitis

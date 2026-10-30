@@ -218,3 +218,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- NeuroPyHLS ---
+# Recordings, cloned reference repos, and generated outputs (see CONTRIBUTING.md, "Data")
+/data/
+/external/
+/out/
+# Paired notebooks: the .py file is the source of truth
+notebooks/**/*.ipynb
+# HLS / simulation byproducts
+*.vcd
+*.fst
+obj_dir/
+hls_output/
+results.xml
+docs/results/summary.md

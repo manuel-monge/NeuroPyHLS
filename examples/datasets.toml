@@ -1,0 +1,11 @@
+# Recordings downloaded by `neuropyhls fetch` into data/<name>/ (git-ignored).
+# Each entry needs: name, url, sha256, filename, license, note.
+# Recordings are never committed to git and never processed on the public docs site.
+#
+# [[dataset]]
+# name = "example"
+# url = "https://example.org/recording.nwb"
+# sha256 = "<64 hex characters>"
+# filename = "recording.nwb"
+# license = "CC-BY-4.0"
+# note = "What it is and which kernels use it."

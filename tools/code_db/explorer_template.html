@@ -1,0 +1,292 @@
+<title>SpikeInterface Algorithm Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: two-pane instrument — algorithm index on the left, detail sheet on the right; stacks on phones. */
+:root {
+  --bg: #f5f6f8; --panel: #ffffff; --fg: #1b1f2a; --muted: #5d6475; --line: #dde1e8; --soft: #eceff4;
+  --accent: #2f4fcf; --accent-soft: #e3e8fb; --warm: #b5660f; --ok: #237a4b;
+  --d0: #2f4fcf; --d1: #6c84e0; --d2: #a3b2ec; --d3: #ccd4f3;
+  --f-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #12141a; --panel: #1a1d25; --fg: #e4e7ef; --muted: #98a0b3; --line: #2c3140; --soft: #232733;
+  --accent: #8ea2ff; --accent-soft: #263055; --warm: #e6a04d; --ok: #5cc48b;
+  --d0: #8ea2ff; --d1: #6a7cc8; --d2: #4a5893; --d3: #353f69; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #12141a; --panel: #1a1d25; --fg: #e4e7ef; --muted: #98a0b3; --line: #2c3140; --soft: #232733;
+  --accent: #8ea2ff; --accent-soft: #263055; --warm: #e6a04d; --ok: #5cc48b;
+  --d0: #8ea2ff; --d1: #6a7cc8; --d2: #4a5893; --d3: #353f69; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 14px/1.5 var(--f-body); }
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 40px; max-width: 1400px; margin: 0 auto; }
+header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
+h1 { font: 600 26px/1.1 var(--f-display); margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.mono { font-family: var(--f-mono); font-size: 12.5px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+.seg button { border: 0; background: none; color: var(--fg); font: 500 13px var(--f-body); padding: 7px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--panel); }
+button:focus-visible, input:focus-visible, select:focus-visible, .item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 860px) { .grid { grid-template-columns: minmax(0, 1fr); } .side { max-height: 360px; } }
+.side { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; display: flex; flex-direction: column; max-height: calc(100vh - 120px); position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+@media (max-width: 860px) { .side { position: static; } }
+.side .tools { padding: 10px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+input[type=search], select { width: 100%; font: 14px var(--f-body); padding: 7px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); color: var(--fg); }
+.list { overflow-y: auto; padding: 4px 0 8px; }
+.grp { font: 600 11px var(--f-body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); padding: 10px 12px 4px; display: flex; justify-content: space-between; }
+.item { display: flex; justify-content: space-between; gap: 8px; padding: 5px 12px; cursor: pointer; border-left: 3px solid transparent; }
+.item:hover { background: var(--soft); }
+.item[aria-selected="true"] { background: var(--accent-soft); border-left-color: var(--accent); }
+.item .n { color: var(--muted); font-family: var(--f-mono); font-size: 11.5px; white-space: nowrap; }
+.item .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.main { min-width: 0; display: grid; gap: 14px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.card h2 { font: 600 20px/1.2 var(--f-display); margin: 0; }
+.card h3 { font: 600 13px var(--f-body); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 0 0 10px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.pill { font: 500 12px var(--f-body); padding: 2px 8px; border-radius: 99px; background: var(--soft); color: var(--fg); border: 1px solid var(--line); }
+.pill.type { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+.pill.warm { color: var(--warm); }
+.doc { color: var(--muted); margin: 6px 0 0; }
+.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; margin-top: 10px; font-size: 13px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; overflow-wrap: anywhere; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.stat { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; }
+.stat b { font: 600 22px var(--f-display); font-variant-numeric: tabular-nums; display: block; }
+.stat span { color: var(--muted); font-size: 12px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 14px; }
+@media (max-width: 420px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.bars { display: grid; gap: 5px; }
+.bar { display: grid; grid-template-columns: minmax(90px, 34%) minmax(0, 1fr) 48px; gap: 8px; align-items: center; font-size: 13px; }
+.bar .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar .track { height: 10px; background: var(--soft); border-radius: 3px; overflow: hidden; }
+.bar .fill { height: 100%; border-radius: 3px; }
+.bar .v { text-align: right; font-family: var(--f-mono); font-size: 12px; font-variant-numeric: tabular-nums; color: var(--muted); }
+.scroll { overflow-x: auto; max-height: 420px; overflow-y: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th { text-align: left; font: 600 11.5px var(--f-body); color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 8px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); cursor: pointer; white-space: nowrap; }
+td { padding: 5px 8px; border-bottom: 1px solid var(--soft); vertical-align: top; }
+td.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.dep { display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 4px; font: 600 11px var(--f-mono); color: var(--panel); }
+.d0 { background: var(--d0); } .d1 { background: var(--d1); } .d2 { background: var(--d2); color: var(--fg); } .d3 { background: var(--d3); color: var(--fg); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 12px var(--f-mono); padding: 2px 7px; border-radius: 5px; background: var(--soft); border: 1px solid var(--line); color: var(--fg); }
+button.chip { cursor: pointer; } button.chip:hover { border-color: var(--accent); }
+.chip i { font-style: normal; color: var(--muted); margin-left: 4px; }
+.legend { display: flex; gap: 10px; align-items: center; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.prim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 18px; }
+.prim-grid h4 { margin: 0 0 4px; font: 600 12.5px var(--f-body); }
+.empty { color: var(--muted); font-style: italic; }
+.hint { color: var(--muted); font-size: 12.5px; }
+@media (prefers-reduced-motion: no-preference) { .fill { transition: width .25s ease; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>SpikeInterface Algorithm Atlas</h1>
+      <div class="sub" id="sub"></div>
+    </div>
+    <div class="seg" role="group" aria-label="View">
+      <button id="m-algo" aria-pressed="true">By algorithm</button>
+      <button id="m-elem" aria-pressed="false">By library, API or primitive</button>
+    </div>
+  </header>
+  <div class="grid">
+    <aside class="side">
+      <div class="tools">
+        <input type="search" id="q" placeholder="Search algorithms" autocomplete="off">
+        <select id="etype" hidden aria-label="Element type">
+          <option value="library">Libraries</option>
+          <option value="library_api">Library API symbols</option>
+          <option value="primitive">Python primitives</option>
+          <option value="object_method">Object methods (.reshape, .astype…)</option>
+          <option value="function">Internal functions</option>
+        </select>
+      </div>
+      <div class="list" id="list" role="listbox" aria-label="Items"></div>
+    </aside>
+    <section class="main" id="main"></section>
+  </div>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const T = D.types, E = D.elements;
+const ti = Object.fromEntries(T.map((t, i) => [t, i]));
+const byId = Object.fromEntries(D.algorithms.map(a => [a.id, a]));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+let mode = "algo", depth = store.get("depth", 1), sel = store.get("sel", "spike sorter:spykingcircus2"), elemSel = null;
+if (!byId[sel]) sel = D.algorithms[0].id;
+
+document.getElementById("sub").innerHTML =
+  `${D.algorithms.length} algorithms · ${D.totals.functions.toLocaleString()} functions · ${D.totals.library_api} library API symbols · ` +
+  `${D.totals.primitives} Python primitives · <span class="mono">${esc(D.meta.package)}@${esc(String(D.meta.commit).slice(0, 7))}</span>`;
+
+// ---------------------------------------------------------------- side list
+function renderList() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const L = document.getElementById("list");
+  let html = "";
+  if (mode === "algo") {
+    const groups = {};
+    for (const a of D.algorithms) {
+      if (q && !(a.name + " " + a.type + " " + a.entry + " " + a.subtype).toLowerCase().includes(q)) continue;
+      (groups[a.type] ??= []).push(a);
+    }
+    for (const [g, arr] of Object.entries(groups).sort()) {
+      html += `<div class="grp"><span>${esc(g)}</span><span>${arr.length}</span></div>`;
+      for (const a of arr) html += `<div class="item" role="option" tabindex="0" data-id="${esc(a.id)}" aria-selected="${a.id === sel}">
+        <span class="t">${esc(a.name)}</span><span class="n">${a.reach} fn</span></div>`;
+    }
+  } else {
+    const t = document.getElementById("etype").value, k = ti[t];
+    const counts = new Map();
+    for (const a of D.algorithms) for (const r of a.rows) if (r[0] === k && r[2] <= depth) counts.set(r[1], (counts.get(r[1]) || 0) + 1);
+    const items = [...counts.entries()].filter(([i]) => !q || E[t][i].join(" ").toLowerCase().includes(q))
+      .sort((x, y) => y[1] - x[1]).slice(0, 400);
+    html += `<div class="grp"><span>${esc(document.getElementById("etype").selectedOptions[0].text)}</span><span>used by n algorithms</span></div>`;
+    for (const [i, n] of items) html += `<div class="item" role="option" tabindex="0" data-e="${i}" aria-selected="${elemSel && elemSel[0] === t && elemSel[1] === i}">
+      <span class="t mono">${esc(E[t][i][0])}</span><span class="n">${n}</span></div>`;
+    if (!items.length) html += `<div class="grp"><span>No matches. Try another name or a deeper depth.</span></div>`;
+  }
+  L.innerHTML = html;
+}
+document.getElementById("list").addEventListener("click", e => pick(e.target.closest(".item")));
+document.getElementById("list").addEventListener("keydown", e => { if (e.key === "Enter") pick(e.target.closest(".item")); });
+function pick(it) {
+  if (!it) return;
+  if (mode === "algo") { sel = it.dataset.id; store.set("sel", sel); }
+  else elemSel = [document.getElementById("etype").value, +it.dataset.e];
+  renderList(); renderMain();
+}
+document.getElementById("q").addEventListener("input", renderList);
+document.getElementById("etype").addEventListener("change", () => { elemSel = null; renderList(); renderMain(); });
+function setMode(m) {
+  mode = m;
+  document.getElementById("m-algo").setAttribute("aria-pressed", m === "algo");
+  document.getElementById("m-elem").setAttribute("aria-pressed", m === "elem");
+  document.getElementById("etype").hidden = m === "algo";
+  document.getElementById("q").placeholder = m === "algo" ? "Search algorithms" : "Search names";
+  document.getElementById("q").value = "";
+  renderList(); renderMain();
+}
+document.getElementById("m-algo").onclick = () => setMode("algo");
+document.getElementById("m-elem").onclick = () => setMode("elem");
+
+// ---------------------------------------------------------------- pieces
+const depthCtl = () => `<div class="legend"><span>Include code reached within</span>
+  <div class="seg" role="group" aria-label="Call depth">${[0, 1, 2, 3].map(d =>
+    `<button data-depth="${d}" aria-pressed="${d === depth}">${d === 0 ? "own code" : "≤ " + d + " call" + (d > 1 ? "s" : "")}</button>`).join("")}</div>
+  <span><span class="dep d0">0</span> own <span class="dep d1">1</span> <span class="dep d2">2</span> <span class="dep d3">3</span> calls away</span></div>`;
+const bars = (items, max, fmt = x => x) => items.length ? `<div class="bars">${items.map(([lbl, v, d, title]) =>
+  `<div class="bar" title="${esc(title || lbl)}"><span class="lbl mono">${esc(lbl)}</span><span class="track"><span class="fill" style="display:block;width:${Math.max(2, 100 * v / max)}%;background:var(--d${d})"></span></span><span class="v">${fmt(v)}</span></div>`).join("")}</div>` : `<p class="empty">None at this depth.</p>`;
+const dep = d => `<span class="dep d${d}" title="${d === 0 ? "in the algorithm's own code" : d + " call(s) away"}">${d}</span>`;
+
+function sortable(id, cols, rows) {
+  const st = sortable.state[id] ??= { k: cols.findIndex(c => c.sort) , dir: -1 };
+  const k = st.k < 0 ? 0 : st.k;
+  rows.sort((a, b) => { const x = a[k], y = b[k]; return (typeof x === "number" ? x - y : String(x).localeCompare(String(y))) * st.dir; });
+  return `<div class="scroll"><table data-tbl="${id}"><thead><tr>${cols.map((c, i) => `<th data-k="${i}" class="${c.num ? "num" : ""}" aria-sort="${i === k ? (st.dir > 0 ? "ascending" : "descending") : "none"}">${esc(c.h)}${i === k ? (st.dir > 0 ? " ▲" : " ▼") : ""}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(r => `<tr>${cols.map((c, i) => `<td class="${c.num ? "num" : ""}">${c.f ? c.f(r[i], r) : esc(r[i])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+sortable.state = {};
+
+// ---------------------------------------------------------------- main panels
+function renderMain() {
+  const M = document.getElementById("main");
+  if (mode === "elem") return renderElem(M);
+  const a = byId[sel];
+  const rows = a.rows.filter(r => r[2] <= depth);
+  const of = k => rows.filter(r => r[0] === k);
+  const fns = of(ti.function), libs = of(ti.library), api = of(ti.library_api), prim = of(ti.primitive), meth = of(ti.object_method);
+  const rel = D.relations.filter(r => r[0] === a.id), relIn = D.relations.filter(r => r[1] === a.id);
+
+  const libBars = libs.sort((x, y) => y[3] - x[3]).map(r => [E.library[r[1]][0], r[3], r[2], E.library[r[1]][1]]);
+  const primCats = {};
+  for (const r of prim) { const [id, cat, desc] = E.primitive[r[1]]; (primCats[cat] ??= []).push([desc, r[3], r[2], id]); }
+  const pmax = Math.max(1, ...prim.map(r => r[3]));
+
+  M.innerHTML = `
+  <div class="card">
+    <h2>${esc(a.name)}</h2>
+    <div class="pills"><span class="pill type">${esc(a.type)}</span>${a.subtype ? `<span class="pill">${esc(a.subtype)}</span>` : ""}
+      ${a.numba ? `<span class="pill warm">numba JIT</span>` : ""}${a.torch ? `<span class="pill warm">torch</span>` : ""}</div>
+    ${a.doc ? `<p class="doc">${esc(a.doc)}</p>` : ""}
+    <dl class="kv"><dt>Entry point</dt><dd class="mono">${esc(a.entry)} <span class="hint">(${esc(a.kind)})</span></dd>
+      <dt>Found via</dt><dd>${esc(a.found)}</dd>${a.notes ? `<dt>Notes</dt><dd>${esc(a.notes)}</dd>` : ""}
+      <dt>Own code</dt><dd>${a.lines} lines</dd></dl>
+  </div>
+  <div class="card">${depthCtl()}
+    <div class="stats" style="margin-top:12px">
+      <div class="stat"><b>${fns.length}</b><span>internal functions</span></div>
+      <div class="stat"><b>${libs.length}</b><span>libraries</span></div>
+      <div class="stat"><b>${api.length}</b><span>library API symbols</span></div>
+      <div class="stat"><b>${prim.length}</b><span>Python primitives</span></div>
+      <div class="stat"><b>${meth.length}</b><span>object methods</span></div>
+    </div>
+  </div>
+  ${rel.length || relIn.length ? `<div class="card"><h3>Related algorithms</h3>
+    ${rel.length ? `<p class="hint">Uses</p><div class="chips">${rel.map(r => `<button class="chip" data-go="${esc(r[1])}" title="${esc(r[2])}">${esc(r[1])}</button>`).join("")}</div>` : ""}
+    ${relIn.length ? `<p class="hint" style="margin-top:10px">Used by</p><div class="chips">${relIn.map(r => `<button class="chip" data-go="${esc(r[0])}" title="${esc(r[2])}">${esc(r[0])}</button>`).join("")}</div>` : ""}
+  </div>` : ""}
+  <div class="two">
+    <div class="card"><h3><span>Libraries</span><span class="hint">uses (calls + attribute refs)</span></h3>${bars(libBars, Math.max(1, ...libBars.map(b => b[1])))}</div>
+    <div class="card"><h3><span>Object methods</span><span class="hint">receiver type unknown, mostly NumPy arrays</span></h3>
+      ${meth.length ? `<div class="chips">${meth.sort((x, y) => y[3] - x[3]).slice(0, 80).map(r => `<span class="chip">.${esc(E.object_method[r[1]][0])}<i>${r[3]}</i></span>`).join("")}</div>` : `<p class="empty">None at this depth.</p>`}</div>
+  </div>
+  <div class="card"><h3><span>Library API symbols</span><span class="hint">click a header to sort</span></h3>
+    ${api.length ? sortable("api", [
+      { h: "Symbol", f: v => `<span class="mono">${esc(v)}</span>` }, { h: "Category" }, { h: "Uses", num: 1, sort: 1 }, { h: "Depth", num: 1, f: dep }],
+      api.map(r => [E.library_api[r[1]][0], E.library_api[r[1]][1], r[3], r[2]])) : `<p class="empty">None at this depth.</p>`}</div>
+  <div class="card"><h3><span>Python primitives</span><span class="hint">count of AST occurrences</span></h3>
+    ${prim.length ? `<div class="prim-grid">${Object.entries(primCats).sort((x, y) => y[1].reduce((s, b) => s + b[1], 0) - x[1].reduce((s, b) => s + b[1], 0))
+      .map(([c, arr]) => `<div><h4>${esc(c)}</h4>${bars(arr.sort((x, y) => y[1] - x[1]), pmax)}</div>`).join("")}</div>` : `<p class="empty">None at this depth.</p>`}</div>
+  <div class="card"><h3><span>Internal functions</span><span class="hint">depth 0 = the algorithm's own methods</span></h3>
+    ${sortable("fn", [
+      { h: "Function", f: (v, r) => `<span class="mono">${esc(v)}</span>${r[7] ? `<div class="hint">${esc(r[7])}</div>` : ""}` },
+      { h: "Kind" }, { h: "Depth", num: 1, f: dep, sort: 0 }, { h: "Lines", num: 1 }, { h: "CC", num: 1 },
+      { h: "Reached from", f: v => v ? `<span class="mono hint">${esc(v)}</span>` : "" }],
+      fns.map(r => { const f = E.function[r[1]]; return [f[0] + (f[5] ? " ⚡" : ""), f[1], r[2], f[3], f[4], r[4] >= 0 ? E.function[r[4]][0].split(".").slice(-2).join(".") : "", 0, f[6]]; }))}
+    <p class="hint">CC is cyclomatic complexity. ⚡ marks a numba-jitted function.</p></div>`;
+  wire(M);
+}
+
+function renderElem(M) {
+  if (!elemSel) { M.innerHTML = `<div class="card">${depthCtl()}<p style="margin-top:12px">Pick a library, API symbol, primitive or function on the left to see every algorithm that uses it.</p>
+    <p class="hint">Example: choose <b>Library API symbols</b> and search <span class="mono">scipy.signal</span> to find which algorithms filter with SciPy.</p></div>`; return wire(M); }
+  const [t, i] = elemSel, k = ti[t], rec = E[t][i];
+  const users = [];
+  for (const a of D.algorithms) for (const r of a.rows) if (r[0] === k && r[1] === i && r[2] <= depth) users.push([a.name, a.type, r[2], r[3], a.id]);
+  M.innerHTML = `<div class="card"><h2 class="mono" style="font-size:18px;overflow-wrap:anywhere">${esc(rec[0])}</h2>
+    <div class="pills"><span class="pill type">${esc(t.replace("_", " "))}</span>${rec[1] && t !== "function" ? `<span class="pill">${esc(rec[1])}</span>` : ""}</div>
+    ${t === "primitive" ? `<p class="doc">${esc(rec[2])}</p>` : ""}${t === "function" && rec[6] ? `<p class="doc">${esc(rec[6])}</p>` : ""}</div>
+  <div class="card">${depthCtl()}</div>
+  <div class="card"><h3><span>Used by ${users.length} algorithm${users.length === 1 ? "" : "s"}</span></h3>
+    ${users.length ? sortable("users", [
+      { h: "Algorithm", f: (v, r) => `<button class="chip" data-go="${esc(r[4])}">${esc(v)}</button>` }, { h: "Type" },
+      { h: "Depth", num: 1, f: dep }, { h: "Uses", num: 1, sort: 1 }], users) : `<p class="empty">No algorithm reaches it within this depth.</p>`}</div>`;
+  wire(M);
+}
+
+function wire(M) {
+  M.querySelectorAll("[data-depth]").forEach(b => b.onclick = () => { depth = +b.dataset.depth; store.set("depth", depth); renderList(); renderMain(); });
+  M.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { sel = b.dataset.go; store.set("sel", sel); setMode("algo");
+    document.querySelector(`.item[data-id="${CSS.escape(sel)}"]`)?.scrollIntoView({ block: "nearest" }); });
+  M.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => {
+    const id = th.closest("table").dataset.tbl, st = sortable.state[id], k = +th.dataset.k;
+    if (st.k === k) st.dir *= -1; else { st.k = k; st.dir = -1; }
+    renderMain(); });
+}
+
+renderList(); renderMain();
+document.querySelector(`.item[data-id="${CSS.escape(sel)}"]`)?.scrollIntoView({ block: "nearest" });
+</script>
