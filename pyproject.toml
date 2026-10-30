@@ -1,7 +1,7 @@
 [project]
 name = "neuropyhls"
 version = "0.1.0.dev0"
-description = "Compile Python neural-signal algorithms to HLS C++ and Verilog, with verification against the Python reference."
+description = "High-level synthesis of neural-signal algorithms directly from Python to Verilog, compared against an HLS C++ baseline."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"

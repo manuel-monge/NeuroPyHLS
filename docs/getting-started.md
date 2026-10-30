@@ -11,7 +11,7 @@ uv sync
 uv run neuropyhls --help
 ```
 
-For the hardware steps, also install [Bambu](https://panda.dei.polimi.it/) and [Verilator](https://www.veripool.org/verilator/), and put both on your `PATH`. Vitis HLS is optional.
+For RTL simulation, install [Verilator](https://www.veripool.org/verilator/). For the baseline flow, also install [Bambu](https://panda.dei.polimi.it/). Vitis HLS is optional. Put them on your `PATH`.
 
 ## Reference code and recordings
 

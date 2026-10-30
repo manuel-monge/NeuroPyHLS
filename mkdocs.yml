@@ -1,7 +1,7 @@
 # Built with Zensical (`uv run --group docs zensical build`).
 # Kept within what Material for MkDocs also understands, as a fallback.
 site_name: NeuroPyHLS
-site_description: Compile Python neural-signal algorithms to HLS C++ and Verilog.
+site_description: High-level synthesis of neural-signal algorithms directly from Python to Verilog.
 site_url: https://openic-org.github.io/NeuroPyHLS/
 repo_url: https://github.com/openic-org/NeuroPyHLS
 repo_name: openic-org/NeuroPyHLS

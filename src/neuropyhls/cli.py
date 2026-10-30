@@ -6,14 +6,16 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from neuropyhls import __version__
+from neuropyhls.backends import FLOWS
 from neuropyhls.datasets import fetch_dataset, load_datasets
 from neuropyhls.sources import fetch_source, load_sources
 
 PIPELINE = {
     "analyse": "inspect a Python kernel: structure, operations, libraries",
     "profile": "measure value ranges and operation counts on recordings",
-    "port": "lower the kernel to HLS C++ for a backend (bambu, vitis)",
-    "verify": "compare Python, C simulation, and RTL simulation outputs",
+    "port": "compile the kernel to Verilog (direct flow, or baseline flow via HLS C++)",
+    "verify": "check a flow's outputs against the Python reference on golden vectors",
+    "compare": "compare the direct flow against the baseline flows (accuracy, latency, resources)",
 }
 
 
@@ -46,6 +48,8 @@ def build_parser() -> argparse.ArgumentParser:
     for name, help_text in PIPELINE.items():
         p = sub.add_parser(name, help=help_text)
         p.add_argument("kernel", type=Path, help="Python file containing the kernel")
+        if name in ("port", "verify"):
+            p.add_argument("--flow", choices=FLOWS, default="direct", help="default: direct")
         p.set_defaults(func=_not_implemented)
 
     p = sub.add_parser("fetch-sources", help="clone pinned external repositories")

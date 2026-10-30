@@ -6,9 +6,9 @@ NeuroPyHLS runs these as separate programs that users install themselves. Their 
 
 | Tool | Licence | Use |
 |---|---|---|
-| [Bambu (PandA)](https://panda.dei.polimi.it/) | GPL-3.0 | Primary HLS backend: C++ → Verilog |
-| [AMD Vitis HLS](https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vitis/vitis-hls.html) | Proprietary (AMD) | Secondary HLS backend |
-| [Verilator](https://www.veripool.org/verilator/) | LGPL-3.0 / Artistic-2.0 | RTL simulation |
+| [Bambu (PandA)](https://panda.dei.polimi.it/) | GPL-3.0 | Baseline flow, primary tool: HLS C++ → Verilog |
+| [AMD Vitis HLS](https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vitis/vitis-hls.html) | Proprietary (AMD) | Baseline flow, secondary tool |
+| [Verilator](https://www.veripool.org/verilator/) | LGPL-3.0 / Artistic-2.0 | RTL simulation of both flows |
 | [cocotb](https://www.cocotb.org/) | BSD-3-Clause | Python testbenches for RTL (optional `rtl` dependency group) |
 
 ## Reference repositories (cloned into `external/`, not committed)

@@ -5,10 +5,13 @@ neuropyhls [--version] <command> ...
 
   analyse KERNEL         inspect a Python kernel: structure, operations, libraries
   profile KERNEL         measure value ranges and operation counts on recordings
-  port KERNEL            lower the kernel to HLS C++ for a backend (bambu, vitis)
-  verify KERNEL          compare Python, C simulation, and RTL simulation outputs
+  port KERNEL [--flow F] compile the kernel to Verilog; F = direct (default), bambu, vitis
+  verify KERNEL [--flow F] check a flow's outputs against the Python reference
+  compare KERNEL         compare the direct flow against the baseline flows
   fetch-sources [NAME…]  clone pinned external repositories      (--manifest, --dest)
   fetch [NAME…]          download recordings and check SHA-256    (--manifest, --dest)
 ```
 
-`analyse`, `profile`, `port` and `verify` are not implemented yet; they exit with code 2.
+`--flow direct` is the Python → Verilog compiler the project is building. `bambu` and `vitis` are the baseline flow through HLS C++.
+
+`analyse`, `profile`, `port`, `verify` and `compare` are not implemented yet; they exit with code 2.

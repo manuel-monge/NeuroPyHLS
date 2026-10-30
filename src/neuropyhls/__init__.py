@@ -1,4 +1,4 @@
-"""NeuroPyHLS: compile Python neural-signal algorithms to HLS C++ and Verilog."""
+"""NeuroPyHLS: high-level synthesis of neural-signal algorithms directly from Python to Verilog."""
 
 from importlib.metadata import PackageNotFoundError, version
 

@@ -1,27 +1,32 @@
 # NeuroPyHLS
 
-**Compile Python neural-signal algorithms to HLS C++ and Verilog, and verify the hardware against the Python reference.**
+**A high-level synthesis compiler that takes neural-signal algorithms directly from Python to Verilog, without a C++ step.**
 
 [Documentation](https://openic-org.github.io/NeuroPyHLS/) · [Contributing](CONTRIBUTING.md) · [AI contributions](AI_CONTRIBUTIONS.md) · License: Apache-2.0 (code), CC-BY-4.0 (docs)
 
 > **Status: pre-alpha (`0.1.0.dev0`).** The pipeline commands are stubs. Until 1.0, interfaces may change without notice.
 
-NeuroPyHLS has two parts:
+NeuroPyHLS has three parts:
 
-1. **A compiler-like tool.** A Python algorithm goes in. It is analysed, profiled and ported to HLS C++, and an HLS tool turns that into a Verilog kernel, with no hand edits. The targets are FPGA and ASIC; for now the flow stops at Verilog.
-2. **A research environment.** It holds the notebooks, analyses, code databases, results and documentation behind the tool.
+1. **A direct Python → Verilog HLS compiler (the main goal).** A neural-signal algorithm written in Python is lowered straight to a Verilog kernel, with no C++ step. NeuroPyHLS does the scheduling, resource binding and control generation itself. This path is under development; building it is what the project is about.
+2. **A baseline flow, Python → HLS C++ → Verilog.** The same Python kernel is ported to HLS C++ and synthesized with Bambu (or Vitis HLS). It acts as the reference the direct compiler is tested and compared against: same inputs, same golden vectors, and a side-by-side comparison of accuracy, latency, throughput and resources.
+3. **A research environment.** It holds the code databases, the literature database, notebooks and results behind both flows.
+
+Both flows share the frontend, profiling, IR, golden vectors and verification. Only the back half differs, so any difference in results comes from the compiler itself. The targets are FPGA and ASIC; for now both flows stop at Verilog.
 
 ```
-Python kernel ──► analyse ──► profile ──► port ──► HLS C++ ──► Bambu / Vitis HLS ──► Verilog
-                                                     │                                 │
-                                                     └──── verify: Python vs C sim vs RTL sim (golden vectors, error/SNR)
+                                           ┌─► direct:   schedule ─► bind ─► FSM/datapath ─► Verilog (A)
+Python kernel ─► analyse ─► profile ─► IR ─┤
+                                           └─► baseline: HLS C++ ─► Bambu / Vitis HLS ─────► Verilog (B)
+
+verify:   Python  vs  RTL sim (A)  vs  C sim + RTL sim (B)        compare:  A vs B
 ```
 
-The first target is a **bandpass filter followed by a threshold-crossing spike detector**, using SpikeInterface as the reference implementation.
+The first target is a **bandpass filter followed by a threshold-crossing spike detector**, compiled through both flows, with SpikeInterface as the Python reference.
 
 ## Quick start
 
-You need [uv](https://docs.astral.sh/uv/) and Git. Bambu and Verilator are needed only for the hardware steps.
+You need [uv](https://docs.astral.sh/uv/) and Git. Verilator is needed for RTL simulation, and Bambu only for the baseline flow.
 
 ```bash
 git clone https://github.com/openic-org/NeuroPyHLS.git
@@ -38,7 +43,7 @@ Everything runs locally. The public docs site never processes recordings.
 
 | Path | Contents |
 |---|---|
-| `src/neuropyhls/` | The package: `frontend/` (Python → IR), `ir/`, `passes/` (analysis, profiling, fixed point), `backends/` (Bambu, Vitis), `verify/`, and the CLI |
+| `src/neuropyhls/` | The package: `frontend/` (Python → IR), `ir/`, `passes/` (analysis, profiling, fixed point), `backends/` (`direct/` → Verilog; baseline `bambu/`, `vitis/` via HLS C++), `verify/`, and the CLI |
 | `tests/` | `unit/`, `bambu/`, `vitis/` (marked automatically by folder) and `golden/` vectors |
 | `rtl/` | Hand-written Verilog (wrappers, testbenches) |
 | `notebooks/` | Jupytext-paired notebooks, stored as `.py` files |
@@ -53,7 +58,7 @@ Everything runs locally. The public docs site never processes recordings.
 <!-- --8<-- [start:licensing] -->
 - **Code** is under the [Apache License 2.0](https://github.com/openic-org/NeuroPyHLS/blob/main/LICENSE). **Documentation** in `docs/` is under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
 - **Your generated output is yours.** The HLS C++, Verilog and reports that NeuroPyHLS produces from your algorithms belong to you. Our licence places no conditions on them.
-- **HLS tools are external.** NeuroPyHLS calls Bambu (GPL-3.0) and Vitis HLS (proprietary) as separate programs. It does not include, link or redistribute them; you install them yourself. See [THIRD_PARTY.md](https://github.com/openic-org/NeuroPyHLS/blob/main/THIRD_PARTY.md).
+- **Baseline HLS tools are external.** For the baseline flow, NeuroPyHLS calls Bambu (GPL-3.0) and Vitis HLS (proprietary) as separate programs. It does not include, link or redistribute them; you install them yourself. See [THIRD_PARTY.md](https://github.com/openic-org/NeuroPyHLS/blob/main/THIRD_PARTY.md).
 - **Porting other people's code.** Port only from permissively licensed sources (MIT, BSD, Apache-2.0, and similar). Keep their copyright notice and add an entry to `THIRD_PARTY.md`.
 - **Never copy GPL or other copyleft code into this repository**, for example Kilosort. You may read it as a reference for behaviour and write an independent implementation.
 - **Contributions** are accepted under the same licences (inbound = outbound). There is no CLA; see [CONTRIBUTING.md](https://github.com/openic-org/NeuroPyHLS/blob/main/CONTRIBUTING.md).

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from neuropyhls.cli import main
+from neuropyhls.cli import build_parser, main
 from neuropyhls.datasets import load_datasets
 from neuropyhls.sources import load_sources
 
@@ -20,6 +20,18 @@ def test_pipeline_stubs_exit_2(tmp_path: Path) -> None:
     kernel = tmp_path / "k.py"
     kernel.write_text("def f(x):\n    return x\n")
     assert main(["analyse", str(kernel)]) == 2
+
+
+def test_flow_option(tmp_path: Path) -> None:
+    kernel = tmp_path / "k.py"
+    kernel.write_text("def f(x):\n    return x\n")
+    args = build_parser().parse_args(["port", str(kernel)])
+    assert args.flow == "direct"
+    args = build_parser().parse_args(["port", "--flow", "bambu", str(kernel)])
+    assert args.flow == "bambu"
+    assert main(["compare", str(kernel)]) == 2
+    with pytest.raises(SystemExit):
+        build_parser().parse_args(["port", "--flow", "catapult", str(kernel)])
 
 
 def test_manifests_parse() -> None:
