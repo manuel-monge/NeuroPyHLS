@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use NeuroPyHLS, please cite it as below."
-title: "NeuroPyHLS: compiling Python neural-signal algorithms to HLS and Verilog"
+title: "NeuroPyHLS: high-level synthesis of neural-signal algorithms directly from Python to Verilog"
 type: software
 authors:
   - family-names: Monge
@@ -12,8 +12,13 @@ url: "https://openic-org.github.io/NeuroPyHLS/"
 license: Apache-2.0
 version: 0.1.0.dev0
 date-released: "2026-10-30"
+abstract: >-
+  NeuroPyHLS is a high-level synthesis compiler that lowers neural-signal algorithms written in
+  Python directly to Verilog, without a C++ step. A baseline flow through HLS C++ and Bambu or
+  Vitis HLS is used to verify it and compare against it.
 keywords:
   - high-level synthesis
+  - Python to Verilog
   - FPGA
   - ASIC
   - neural signal processing

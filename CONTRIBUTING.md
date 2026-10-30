@@ -12,7 +12,7 @@ uv sync --group docs          # only if you work on the docs site
 uv sync --group rtl           # only if you write cocotb testbenches
 ```
 
-The hardware steps also need [Bambu](https://panda.dei.polimi.it/) and [Verilator](https://www.veripool.org/verilator/) on your `PATH`. For hardware files you need [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [Verible](https://github.com/chipsalliance/verible); without them, those pre-commit hooks are skipped.
+RTL simulation needs [Verilator](https://www.veripool.org/verilator/) on your `PATH`, and the baseline flow needs [Bambu](https://panda.dei.polimi.it/). For hardware files you need [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [Verible](https://github.com/chipsalliance/verible); without them, those pre-commit hooks are skipped.
 
 ## Workflow
 
@@ -29,8 +29,8 @@ Tests are marked by the folder they live in:
 | Folder | Marker | Needs | Run with |
 |---|---|---|---|
 | `tests/unit/` | `unit` | nothing | `uv run pytest -m unit` |
-| `tests/bambu/` | `bambu` | Bambu + Verilator | `uv run pytest -m bambu` |
-| `tests/vitis/` | `vitis` | Vitis HLS | `uv run pytest -m vitis` |
+| `tests/bambu/` | `bambu` | Bambu + Verilator (baseline flow) | `uv run pytest -m bambu` |
+| `tests/vitis/` | `vitis` | Vitis HLS (baseline flow) | `uv run pytest -m vitis` |
 
 Add `@pytest.mark.slow` to long tests. A tool test is skipped when its tool is not installed.
 

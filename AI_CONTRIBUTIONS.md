@@ -14,7 +14,7 @@ The lead delegates these tasks to the assistant. Its output is a draft until a h
 | Area | Assistant's role |
 |---|---|
 | Repository setup | Proposes and implements the structure, packaging, tooling, CI workflows and contributor documents, following decisions made by the lead |
-| Compiler code | Drafts frontend, IR, passes, backends and verification code, together with tests |
+| Compiler code | Drafts the direct Python → Verilog compiler (frontend, IR, passes, scheduling, binding, Verilog emission), the HLS C++ baseline and verification code, together with tests |
 | Code analysis | Builds and maintains the code databases in `tools/code_db/`: static analysis of reference repositories such as SpikeInterface |
 | Literature support | Searches, reads and extracts papers into structured tables (the lit-db); writes summaries and comparisons |
 | Documentation | Drafts the docs pages, READMEs and explanations of results |

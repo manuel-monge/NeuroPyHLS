@@ -13,11 +13,13 @@ You assist the project lead (Manuel Monge).
 
 ## Project
 
-NeuroPyHLS compiles Python neural-signal algorithms to HLS C++ and then to Verilog.
-- **Stages:** `analyse → profile → port → verify`.
-- **Backends:** Bambu first, Vitis HLS second; both are run as external programs.
+NeuroPyHLS is a high-level synthesis compiler that takes neural-signal algorithms **directly from Python to Verilog, with no C++ step**. That direct flow is the main goal, and it doesn't exist yet: building it is the project.
+- **Direct flow** (`backends/direct/`): IR → scheduling → binding → FSM/datapath → Verilog.
+- **Baseline flow** (`backends/bambu/`, `backends/vitis/`): IR → HLS C++ → Bambu (first) or Vitis HLS (second), run as external programs. It exists to test the direct flow and compare against it.
+- **Shared:** frontend, profiling, IR, golden vectors, verification. Stages: `analyse → profile → port --flow direct|bambu|vitis → verify → compare`.
+- Call the flows "direct" and "baseline" everywhere: code, CLI, docs, results.
 - **Targets:** FPGA and ASIC. The flow stops at Verilog for now.
-- **First kernel:** bandpass filter followed by threshold-crossing detection, with SpikeInterface as the reference (`examples/sources.toml`).
+- **First kernel:** bandpass filter followed by threshold-crossing detection, through both flows, with SpikeInterface as the reference (`examples/sources.toml`).
 
 ## Commands
 

@@ -1,6 +1,6 @@
 # Bandpass filter + threshold-crossing detection
 
-The first kernel. It is small, causal, well understood, and present in SpikeInterface, so a trusted reference and golden vectors are easy to get.
+The first kernel for both flows. It is small, causal, well understood, and present in SpikeInterface, so a trusted reference and golden vectors are easy to get. Its first comparison is direct versus Bambu.
 
 1. **Bandpass filter:** IIR, second-order sections (biquads), e.g. 300–6000 Hz.
 2. **Noise estimate:** median absolute deviation (MAD) per channel.
